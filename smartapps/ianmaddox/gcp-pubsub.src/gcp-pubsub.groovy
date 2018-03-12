@@ -1,3 +1,4 @@
+
 /*
  * SmartThings example Code for Google Cloug Pub/Sub Connector
  *
@@ -84,6 +85,13 @@ def childStartPage() {
             input "lockLogType", "enum", title: "Values to log", options: ["locked/unlocked", "true/false", "1/0"], defaultValue: "locked/unlocked", required: true, multiple: false
         }
 
+		section("Power Meters") {
+            input "energy", "capability.energyMeter", title: "Energy Meters", required: false, multiple: true
+            input "power", "capability.powerMeter", title: "Power Meters", required: false, multiple: true
+            input "current", "capability.currentMeter", title: "Current Meters", required: false, multiple: true
+            input "voltage", "capability.voltageMeasurement", title: "Voltage Measurement", required: false, multiple: true
+        }
+
         section("Log Other Devices") {
             input "alarm", "capability.alarm", title: "Alarm", required: false, multiple: true
             input "batteries", "capability.battery", title: "Batteries", multiple: true, required: false
@@ -91,10 +99,8 @@ def childStartPage() {
             input "buttons", "capability.button", title: "Buttons", multiple: true, required: false
             input "colorControl", "capability.colorControl", title: "Color Control", multiple: true, required: false
             input "dimmerSwitches", "capability.switchLevel", title: "Dimmer Switches", required: false, multiple: true
-            input "energyMeters", "capability.energyMeter", title: "Energy Meters", required: false, multiple: true
             input "humidities", "capability.relativeHumidityMeasurement", title: "Humidity Sensors", required: false, multiple: true
             input "illuminances", "capability.illuminanceMeasurement", title: "Illuminance Sensors", required: false, multiple: true
-            input "powerMeters", "capability.powerMeter", title: "Power Meters", required: false, multiple: true
             input "presenceSensors", "capability.presenceSensor", title: "Presence Sensors", required: false, multiple: true
             input "sensorAttributes", "text", title: "Sensor Attributes (comma delimited)", required: false
             input "sensors", "capability.sensor", title: "Sensors", required: false, multiple: true
@@ -178,6 +184,11 @@ def initChild() {
 // capability.touchSensor touch
 // capability.waterSensor water
 
+    subscribe(current, "current", handleEnergyEvent)
+    subscribe(energy, "energy", handleEnergyEvent)
+    subscribe(voltage, "voltage", handleEnergyEvent)
+    subscribe(power, "power", handleEnergyEvent)
+
     subscribe(accelerationSensor, "acceleration", handleStringEvent)
     subscribe(airConditioner, "airConditioner", handleStringEvent)
     subscribe(alarm, "alarm", handleStringEvent)
@@ -190,7 +201,6 @@ def initChild() {
     subscribe(coolingSetPoints, "coolingSetpoint", handleNumberEvent)
     subscribe(dimmerSwitches, "level", handleNumberEvent)
     subscribe(dimmerSwitches, "switch", handleStringEvent)
-    subscribe(energyMeters, "energy", handleNumberEvent)
     subscribe(heatingSetPoints, "heatingSetpoint", handleNumberEvent)
     subscribe(humidities, "humidity", handleNumberEvent)
     subscribe(illuminances, "illuminance", handleNumberEvent)
@@ -201,7 +211,9 @@ def initChild() {
     subscribe(switches, "switch", handleStringEvent)
     subscribe(temperatures, "temperature", handleNumberEvent)
     subscribe(thermOperatingStates, "thermostatOperatingState", handleStringEvent)
-    if (sensors != null && sensorAttributes != null) {
+    subscribe(voltageMeasurements, "voltage", handleEnergyEvent)
+
+	if (sensors != null && sensorAttributes != null) {
         sensorAttributes.tokenize(',').each {
             subscribe(sensors, it, handleStringEvent)
         }
@@ -218,6 +230,10 @@ def setOriginalState() {
     atomicState.lastSchedule = 0
 }
 
+def handleEnergyEvent(evt) {
+//    log.debug "energy event ${evt}"
+    sendValue(evt) { it }
+}
 def handleStringEvent(evt) {
 //    log.debug "handling string event ${evt}"
     if (settings.bufferTime.toInteger() > 0) {
@@ -406,3 +422,4 @@ def processBuffer() {
         scheduleBuffer()
     }
 }
+
