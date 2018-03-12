@@ -22,9 +22,9 @@ definition(
   description: "Google Cloud Pub/Sub Connector",
   category: "My Apps",
   singleInstance: false, // Log different devices to different endpoints
-  iconUrl:   "https://raw.githubusercontent.com/ianmaddox/smartthings-gcppubsub/master/img/pubsub-logo-60.png",
-  iconX2Url: "https://raw.githubusercontent.com/ianmaddox/smartthings-gcppubsub/master/img/pubsub-logo-120.png",
-  iconX3Url: "https://raw.githubusercontent.com/ianmaddox/smartthings-gcppubsub/master/img/pubsub-logo-240.png"
+  iconUrl:   "https://raw.githubusercontent.com/ianmaddox/smartthings-gcppubsub/master/smartapps/ianmaddox/gcp-pubsub.src/img/pubsub-logo-60.png",
+  iconX2Url: "https://raw.githubusercontent.com/ianmaddox/smartthings-gcppubsub/master/smartapps/ianmaddox/gcp-pubsub.src/img/pubsub-logo-120.png",
+  iconX3Url: "https://raw.githubusercontent.com/ianmaddox/smartthings-gcppubsub/master/smartapps/ianmaddox/gcp-pubsub.src/img/pubsub-logo-240.png"
 )
 
 preferences {
