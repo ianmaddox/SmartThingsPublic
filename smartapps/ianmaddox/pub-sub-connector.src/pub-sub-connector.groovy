@@ -48,7 +48,7 @@ def parentPage() {
         }
 
         section("About") {
-            paragraph "Version 1.0"
+            paragraph "Version 1.2"
             href url:"https://github.com/ianmaddox/smartthings-gcppubsub", style:"embedded", required:false, title:"Installation instructions"
         }
     }
@@ -231,7 +231,11 @@ def setOriginalState() {
 
 def handleEnergyEvent(evt) {
 //    log.debug "energy event ${evt}"
-    sendValue(evt) { it }
+    if (settings.bufferTime.toInteger() > 0) {
+        bufferValue(evt) { it }
+    } else {
+        sendValue(evt) { it }
+    }
 }
 def handleStringEvent(evt) {
 //    log.debug "handling string event ${evt}"
